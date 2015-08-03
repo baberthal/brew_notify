@@ -1,4 +1,4 @@
-require "exceptions/terminal_notify_error"
-require "exceptions/growl_error"
-require "execptions/gntp_error"
-require "exceptions/no_notifier_found_error"
+require "brew_notify/exceptions/terminal_notifier_error"
+require "brew_notify/exceptions/growl_error"
+require "brew_notify/exceptions/gntp_error"
+require "brew_notify/exceptions/no_notifier_found_error"
