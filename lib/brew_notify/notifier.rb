@@ -1,13 +1,25 @@
+require 'brew_notify/logger'
+
 module BrewNotify
   class Notifier
-    attr_reader :notifier, :logger
+    SUPPORTED_NOTIFIERS = ['gntp', 'terminal_notifier', 'growl']
+    def self.detect_notifiers
+      SUPPORTED_NOTIFIERS.each do |n|
+        begin
+          return BrewNotify::Notifier.new(notifier: n.to_sym)
+        rescue Exception => e
+          Logger.error "Initialization failed for #{n}: #{e.message}"
+          Logger.debug e.backtrace.join("\n")
+          next
+        end
+      end
+    end
 
     def initialize(options = {})
-      @logger = Logger.new('~/Library/Logs/brew_notify.log')
       if options[:notifier]
         set_preferred_notifier(options)
       else
-        detect_notifiers
+        BrewNotify::Notifier.detect_notifiers
       end
     end
 
@@ -16,24 +28,15 @@ module BrewNotify
       case options[:notifier]
       when :gntp
         require "brew_notify/notifiers/gntp"
-        @notifier = BrewNotify::GNTP.new()
+        extend BrewNotify::GNTP
       when :growl
         require "brew_notify/notifiers/growl"
-        @notifier = BrewNotify::Growl.new()
+        extend BrewNotify::Growl
       when :terminal_notifier
         require "brew_notify/notifiers/terminal_notifier"
-        @notifier = BrewNotify::TerminalNotifier.new()
+        extend BrewNotify::TerminalNotifier
       end
     end
 
-    def detect_notifiers
-      begin
-        require "brew_notify/notifiers/gntp"
-        @notifier = BrewNotify::GNTP.new()
-      rescue LoadError => e
-        @logger.error(e.message)
-        raise
-      end
-    end
   end
 end

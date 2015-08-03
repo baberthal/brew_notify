@@ -6,20 +6,20 @@ module BrewNotify
     def initialize(options = {})
       @brew_exec = get_brew_exec
       @outdated ||= brew_outdated.split("\n")
-      @notifier ||= BrewNotify::Notifier.connect(options)
+      @notifier ||= BrewNotify::Notifier.detect_notifiers
+      notify
     end
 
-    def send_notification
+    def notify
       if needs_update?
-        BrewNotify::Notifier.send(:notify,
-                                  message,
-                                  { title: "Outdated Brew Formulae:" })
+        @notifier.notify(title: "Outdated Brew Formulae:",
+                         message: message,
+                         icon: 'https://assets-cdn.github.com/images/icons/emoji/unicode/1f37a.png')
       else
-        BrewNotify::Notifier.send(:notify,
-                                  message,
-                                  { title: "All Brew Formulae Up-To-Date!" })
+        @notifier.notify(title: "All Brew Formulae Up-To-Date!",
+                         message: message,
+                         icon: 'https://assets-cdn.github.com/images/icons/emoji/unicode/1f37a.png')
       end
-      BrewNotify::Notifier.disconnect
     end
 
     private
@@ -36,9 +36,6 @@ module BrewNotify
       `#{@brew_exec} outdated`
     end
 
-    def needs_update?
-      @outdated.length > 0 && @outdated.first != ''
-    end
 
     def message
       if needs_update?
@@ -46,6 +43,10 @@ module BrewNotify
       else
         "No formulae are currently out of date."
       end
+    end
+
+    def needs_update?
+      @outdated.length != 0 || @outdated.first != ''
     end
   end
 end
