@@ -1,35 +1,21 @@
 #!/usr/bin/env ruby
 
-require "brew_notify"
-require "thor"
+require 'brew_notify'
 
-class CLI < Thor
-  include Thor::Actions
+begin
+  require 'slop'
+rescue NameError, LoadError => e
+  puts "Please run `bundle install` to update your system's gems, or run `gem install slop`"
+  puts "Error message:\n #{e.message}"
+end
 
-  desc "init", "Copies the plist to your ~/Library/LaunchAgents and symlinks the exe to /usr/local/bin"
-
-  def init
-    # `ln -s #{File.absolute_path(__FILE__)} /usr/local/bin`
-    copy_file './lib/brew_notify/templates/com.github.brew_notify.plist',
-      File.expand_path("~/Library/LaunchAgents/com.github.brew_notify.plist")
-    create_link "/usr/local/bin/brew_notify", "exe/brew_notify"
-  end
-
-  desc "check", "debug_info"
-
-
-  def self.source_root
-    File.dirname(__FILE__)
-  end
-
-  self.source_paths << File.absolute_path(File.dirname(__FILE__) + "/../")
-
-  def check
-    self.source_paths.each do |f|
-      puts File.absolute_path(f)
-    end
-    puts self.destination_root
+opts = Slop.parse do |o|
+  o.bool '-i', '--init', 'Copy launchagent to your ~/Library/LaunchAgents and initialize the notifier'
+  o.string '-n', '--notifier', 'Specify the notifier to use. Must be one of gntp / growl / terminal_notifier '
+  o.on '-v', '--version', 'print the version' do
+    puts BrewNotify::VERSION
+    exit
   end
 end
 
-CLI.start
+puts opts.to_hash
