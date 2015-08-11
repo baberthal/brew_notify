@@ -24,7 +24,11 @@ module BrewNotify
 
     private
     def get_brew_exec
-      `which brew`.strip
+      if osx?
+        `which brew`.strip
+      else
+        exit 1
+      end
     end
 
     def brew_update
@@ -36,7 +40,6 @@ module BrewNotify
       `#{@brew_exec} outdated`
     end
 
-
     def message
       if needs_update?
         "The following formulae are outdated:\n" + @outdated.join("\n")
@@ -46,7 +49,11 @@ module BrewNotify
     end
 
     def needs_update?
-      @outdated.length != 0 || @outdated.first != ''
+      !@outdated.empty?
+    end
+
+    def osx?
+      true if RUBY_PLATFORM =~ /darwin/i
     end
   end
 end

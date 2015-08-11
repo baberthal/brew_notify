@@ -14,3 +14,7 @@ end
 group :terminal_notifier do
   gem 'terminal-notifier'
 end
+
+group :development do
+  gem 'colorize'
+end
