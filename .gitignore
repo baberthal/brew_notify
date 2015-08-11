@@ -10,4 +10,4 @@
 *.gem
 vendor/*
 /bin/*
-!*/brew_notify
+!/bin/brew_notify
