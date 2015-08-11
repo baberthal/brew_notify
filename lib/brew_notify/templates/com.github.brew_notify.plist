@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>EnableGlobbing</key>
+    <false/>
+    <key>Label</key>
+    <string>com.github.brew_notify</string>
+    <key>Program</key>
+    <string>/usr/local/bin/brew-notify</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardErrorPath</key>
+	<string>/tmp/org.jmorgan.homebrew-update-notifier.err</string>
+    <key>StandardOutPath</key>
+    <string>/tmp/org.jmorgan.homebrew-update-notifier.out</string>
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Hour</key>
+            <integer>10</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>15</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+    </array>
+</dict>
+</plist>
