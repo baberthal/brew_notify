@@ -7,7 +7,7 @@ module BrewNotify
       @brew_exec = get_brew_exec
       @outdated ||= brew_outdated.split("\n")
       @notifier ||= BrewNotify::Notifier.detect_notifiers
-      notify
+      # notify
     end
 
     def notify

@@ -35,6 +35,7 @@ module BrewNotify
       when :terminal_notifier
         require "brew_notify/notifiers/terminal_notifier"
         extend BrewNotify::TerminalNotifier
+      else raise ArgumentError, 'Notifier not recognized'
       end
     end
 
